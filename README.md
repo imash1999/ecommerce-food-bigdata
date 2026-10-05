@@ -83,8 +83,8 @@ PostgreSQL
 克隆项目：
 
 ```bash
-git clone https://github.com/imash1999/ecommerce-bigdata-analytics.git
-cd ecommerce-bigdata-analytics
+git clone https://github.com/imash1999/restaurants_analytics
+cd restaurants_analytics
 ```
 
 启动所有服务：

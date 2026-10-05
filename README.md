@@ -1,4 +1,4 @@
-# E-Commerce Big Data Analytics
+# FoodExpress Analytics
 
 一个基于 Docker 的电商大数据分析项目，主要用于学习和实践 Kafka、Flink、Spark、Airflow、PostgreSQL 等大数据技术。
 
@@ -85,6 +85,8 @@ PostgreSQL
 ```bash
 git clone https://github.com/imash1999/restaurants_analytics
 cd restaurants_analytics
+docker cp ecommerce_backup_after_images.sql postgres:/tmp/backup.sql
+docker exec -i postgres psql -U postgres -d postgres -f /tmp/backup.sql
 ```
 
 启动所有服务：
@@ -108,7 +110,7 @@ docker compose ps
 | Airflow  | http://localhost:8085 |
 | Flink    | http://localhost:8081 |
 | Grafana  | http://localhost:3000 |
-| MinIO    | http://localhost:9001 |
+
 
 ## 数据库
 

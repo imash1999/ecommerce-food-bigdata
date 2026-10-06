@@ -67,7 +67,7 @@ PostgreSQL
 克隆项目：
 
 ```bash
-git clone https://github.com/imash1999/restaurants_analytics
+git clone https://github.com/imash1999/ecommerce-food-bigdata
 ```
 ```bash
 cd restaurants_analytics

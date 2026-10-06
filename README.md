@@ -12,7 +12,7 @@
 * PostgreSQL 保存业务数据和分析结果
 * Spark 进行批量数据处理
 * Airflow 定时执行数据处理任务
-* MinIO 保存原始数据
+* Seaweedfs 保存原始数据
 * Grafana 显示数据监控
 * Backend 提供 API
 * Frontend 提供简单的数据展示页面
@@ -26,27 +26,11 @@
 * Apache Airflow
 * PostgreSQL
 * Redis
-* MinIO
+* Seaweedfs
 * Grafana
 * FastAPI / Backend
 * HTML / CSS / JavaScript / Frontend
 * Docker & Docker Compose
-
-## 项目结构
-
-```text
-ecommerce-bigdata-analytics/
-├── backend/              # 后端 API
-├── frontend/             # 前端页面
-├── dags/                 # Airflow DAG
-├── scripts/
-│   ├── flink/            # Flink 相关代码
-│   ├── spark/            # Spark 相关代码
-│   ├── generator/        # 模拟数据生成
-│   └── sql/              # SQL 初始化文件
-├── docker-compose.yml
-└── README.md
-```
 
 ## 数据流程
 
@@ -67,7 +51,7 @@ PostgreSQL
 批处理部分：
 
 ```text
-MinIO
+Seaweedfs
   ↓
 Airflow
   ↓
@@ -85,8 +69,7 @@ PostgreSQL
 ```bash
 git clone https://github.com/imash1999/restaurants_analytics
 cd restaurants_analytics
-docker cp ecommerce_backup_after_images.sql postgres:/tmp/backup.sql
-docker exec -i postgres psql -U postgres -d postgres -f /tmp/backup.sql
+
 ```
 
 启动所有服务：
@@ -94,7 +77,12 @@ docker exec -i postgres psql -U postgres -d postgres -f /tmp/backup.sql
 ```bash
 docker compose up -d --build
 ```
-
+```bash
+docker cp ecommerce_backup_after_images.sql postgres:/tmp/backup.sql
+```
+```bash
+docker exec -i postgres psql -U postgres -d postgres -f /tmp/backup.sql
+```
 查看容器：
 
 ```bash

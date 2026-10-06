@@ -11,10 +11,6 @@ import boto3
 from kafka import KafkaProducer
 
 
-# =========================
-# Environment
-# =========================
-
 KAFKA_BOOTSTRAP_SERVERS = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "kafka:9092")
 KAFKA_TOPIC = os.getenv("KAFKA_TOPIC", "order-events")
 KAFKA_EVENTS_TOPIC = os.getenv("KAFKA_EVENTS_TOPIC", "ecommerce-events")
@@ -26,10 +22,6 @@ POSTGRES_USER = os.getenv("POSTGRES_USER", "postgres")
 POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD", "root")
 
 
-# =========================
-# PostgreSQL
-# =========================
-
 def get_db_connection():
     return psycopg2.connect(
         host=POSTGRES_HOST,
@@ -40,15 +32,11 @@ def get_db_connection():
     )
 
 
-# =========================
-# MinIO
-# =========================
-
 s3_client = boto3.client(
     "s3",
-    endpoint_url="http://minio:9000",
-    aws_access_key_id="minioadmin",
-    aws_secret_access_key="minioadminpassword"
+    endpoint_url="http://seaweedfs:9000",
+    aws_access_key_id="seaweedfs",
+    aws_secret_access_key="seaweedfs"
 )
 
 def send_to_minio(event_data, folder="orders"):
@@ -70,12 +58,8 @@ def send_to_minio(event_data, folder="orders"):
             Body=json.dumps(event_data)
         )
     except Exception as e:
-        print(f"MinIO error ({folder}): {e}")
+        print(f"seaweedFs error ({folder}): {e}")
 
-
-# =========================
-# Kafka
-# =========================
 
 print(f"Connecting to Kafka: {KAFKA_BOOTSTRAP_SERVERS}")
 
@@ -91,10 +75,6 @@ while producer is None:
         print(f"Kafka waiting: {e}")
         time.sleep(3)
 
-
-# =========================
-# Generate Order Event
-# =========================
 
 def generate_order_event():
     conn = get_db_connection()
@@ -165,10 +145,6 @@ def generate_order_event():
     return event
 
 
-# =========================
-# Generate Ecommerce Click/Action Event
-# =========================
-
 def generate_ecommerce_event():
     conn = get_db_connection()
     cur = conn.cursor()
@@ -203,24 +179,17 @@ def generate_ecommerce_event():
     }
     return event
 
-
-# =========================
-# Main
-# =========================
-
 if __name__ == "__main__":
     print(f"Starting extended generator...")
 
     while True:
         try:
-            # 1. Генерируем обычное экоммерс-событие (клики/просмотры/покупки)
             ecommerce_event = generate_ecommerce_event()
             if ecommerce_event:
                 producer.send(KAFKA_EVENTS_TOPIC, value=ecommerce_event)
                 send_to_minio(ecommerce_event, folder="events")
                 print(f"Ecommerce event | action={ecommerce_event['action']} | item={ecommerce_event['item_id']}")
 
-            # 2. Генерируем заказ
             order = generate_order_event()
             producer.send(KAFKA_TOPIC, value=order)
             send_to_minio(order, folder="orders")

@@ -12,7 +12,7 @@
 * PostgreSQL 保存业务数据和分析结果
 * Spark 进行批量数据处理
 * Airflow 定时执行数据处理任务
-* Seaweedfs 保存原始数据
+* SeaweedFs 保存原始数据
 * Grafana 显示数据监控
 * Backend 提供 API
 * Frontend 提供简单的数据展示页面
@@ -26,7 +26,7 @@
 * Apache Airflow
 * PostgreSQL
 * Redis
-* Seaweedfs
+* SeaweedFs
 * Grafana
 * FastAPI / Backend
 * HTML / CSS / JavaScript / Frontend
@@ -68,10 +68,10 @@ PostgreSQL
 
 ```bash
 git clone https://github.com/imash1999/restaurants_analytics
-cd restaurants_analytics
-
 ```
-
+```bash
+cd restaurants_analytics
+```
 启动所有服务：
 
 ```bash
@@ -91,13 +91,11 @@ docker compose ps
 
 ## 访问地址
 
-| 服务       | 地址                    |
-| -------- | --------------------- |
-| Frontend | http://localhost:3080 |
-| Backend  | http://localhost:8000 |
-| Airflow  | http://localhost:8085 |
-| Flink    | http://localhost:8081 |
-| Grafana  | http://localhost:3000 |
+Frontend: http://localhost:3080      
+Backend : http://localhost:8000/docs 
+Airflow : http://localhost:8085 
+Flink   : http://localhost:8081
+Grafana : http://localhost:3000
 
 
 ## 数据库

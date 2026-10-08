@@ -70,7 +70,7 @@ PostgreSQL
 git clone https://github.com/imash1999/ecommerce-food-bigdata
 ```
 ```bash
-cd restaurants_analytics
+cd ecommerce-food-bigdata
 ```
 启动所有服务：
 
@@ -122,12 +122,3 @@ PostgreSQL 数据使用 Docker volume 保存，重新启动容器不会自动删
 docker compose down
 ```
 
-再次启动：
-
-```bash
-docker compose up -d
-```
-
-## 说明
-
-这个项目主要用于学习和实践大数据技术，目前还在不断完善中。

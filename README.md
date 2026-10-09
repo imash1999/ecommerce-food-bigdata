@@ -91,11 +91,11 @@ docker compose ps
 
 ## 访问地址
 
-Frontend: http://localhost:3080   
+Frontend: http://localhost:3080 
 Backend : http://localhost:8000/docs 
 Airflow : http://localhost:8085 
-Flink   : http://localhost:8081
-Grafana : http://localhost:3000
+Flink   : http://localhost:8081 
+Grafana : http://localhost:3000 
 Kafka   : http://localhost:8086
 
 

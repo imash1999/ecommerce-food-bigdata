@@ -1,7 +1,5 @@
 # FoodExpress Analytics
 
-一个基于 Docker 的电商大数据分析项目，主要用于学习和实践 Kafka、Flink、Spark、Airflow、PostgreSQL 等大数据技术。
-
 ## 项目功能
 
 项目主要包括：

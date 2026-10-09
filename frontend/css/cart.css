@@ -6,11 +6,6 @@
     padding: 0 24px;
 }
 
-
-/* =========================
-   HEADER
-   ========================= */
-
 .cart-header {
     display: flex;
 
@@ -37,11 +32,6 @@
     text-decoration: underline;
 }
 
-
-/* =========================
-   CART LAYOUT
-   ========================= */
-
 .cart-layout {
     display: grid;
 
@@ -53,11 +43,6 @@
 
     align-items: start;
 }
-
-
-/* =========================
-   CART ITEM
-   ========================= */
 
 .cart-items {
     display: flex;
@@ -131,11 +116,6 @@
     font-weight: 800;
 }
 
-
-/* =========================
-   QUANTITY
-   ========================= */
-
 .quantity-control {
     display: flex;
 
@@ -176,12 +156,6 @@
 
     font-weight: 700;
 }
-
-
-/* =========================
-   REMOVE
-   ========================= */
-
 .remove-button {
     border: none;
 
@@ -197,11 +171,6 @@
 .remove-button:hover {
     color: #d33;
 }
-
-
-/* =========================
-   SUMMARY
-   ========================= */
 
 .order-summary {
     position: sticky;
@@ -283,11 +252,6 @@
     background: var(--primary-dark);
 }
 
-
-/* =========================
-   EMPTY CART
-   ========================= */
-
 .empty-cart {
     max-width: 500px;
 
@@ -337,11 +301,6 @@
 
     text-decoration: none;
 }
-
-
-/* =========================
-   RESPONSIVE
-   ========================= */
 
 @media (max-width: 800px) {
 

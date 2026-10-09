@@ -27,12 +27,6 @@ body {
     color: var(--text);
     line-height: 1.5;
 }
-
-
-/* =========================
-   TOP BAR
-   ========================= */
-
 .topbar {
     position: sticky;
     top: 0;
@@ -168,11 +162,6 @@ body {
     font-weight: 600;
 }
 
-
-/* =========================
-   HERO
-   ========================= */
-
 .hero {
     max-width: 1280px;
 
@@ -283,11 +272,6 @@ body {
     opacity: 0.95;
 }
 
-
-/* =========================
-   SECTIONS
-   ========================= */
-
 .categories-section,
 .restaurants-section {
     max-width: 1280px;
@@ -324,11 +308,6 @@ body {
     color: var(--muted);
     font-size: 13px;
 }
-
-
-/* =========================
-   CATEGORIES
-   ========================= */
 
 .categories {
     display: flex;
@@ -381,11 +360,6 @@ body {
 .category.active strong {
     color: var(--primary);
 }
-
-
-/* =========================
-   RESTAURANTS
-   ========================= */
 
 .restaurants-grid {
     display: grid;
@@ -509,11 +483,6 @@ body {
     text-overflow: ellipsis;
 }
 
-
-/* =========================
-   LOADING
-   ========================= */
-
 .loading {
     min-height: 250px;
 
@@ -544,11 +513,6 @@ body {
         transform: rotate(360deg);
     }
 }
-
-
-/* =========================
-   ERROR
-   ========================= */
 
 .error-message {
     padding: 35px;
@@ -583,11 +547,6 @@ body {
 
     cursor: pointer;
 }
-
-
-/* =========================
-   FOOTER
-   ========================= */
 
 .footer {
     margin-top: 80px;
@@ -636,11 +595,6 @@ body {
 .footer-tech strong {
     color: #ddd;
 }
-
-
-/* =========================
-   RESPONSIVE
-   ========================= */
 
 @media (max-width: 1050px) {
 
@@ -764,3 +718,4 @@ body {
         display: none;
     }
 }
+

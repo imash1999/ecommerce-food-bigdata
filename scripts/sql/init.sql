@@ -9,6 +9,14 @@ CREATE TABLE IF NOT EXISTS realtime_metrics (
     created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE IF NOT EXISTS realtime_order_metrics (
+    window_start TIMESTAMP WITHOUT TIME ZONE,
+    window_end TIMESTAMP WITHOUT TIME ZONE,
+    total_orders BIGINT,
+    total_revenue NUMERIC(12, 2),
+    avg_order_amount NUMERIC(12, 2)
+);
+
 CREATE TABLE IF NOT EXISTS rfm_analysis (
     user_id VARCHAR(64) PRIMARY KEY,
     recency INT,

@@ -32,6 +32,7 @@ services:
   flink-jobmanager:
     image: flink:1.17-java11
     container_name: flink-jobmanager
+    restart: unless-stopped
     ports:
       - "8081:8081"
     command: jobmanager
@@ -45,10 +46,13 @@ services:
       - ./scripts/flink/lib:/opt/flink/usrlib
       - ./scripts/flink/submit.sql:/opt/flink/submit.sql
       - ./scripts/flink/lib/flink-sql-connector-kafka-3.0.0-1.17.jar:/opt/flink/lib/flink-sql-connector-kafka-3.0.0-1.17.jar
+      - ./scripts/flink/lib/flink-connector-jdbc-3.1.0-1.17.jar:/opt/flink/lib/flink-connector-jdbc-3.1.0-1.17.jar
+      - ./scripts/flink/lib/postgresql-42.6.0.jar:/opt/flink/lib/postgresql-42.6.0.jar
 
   flink-taskmanager:
     image: flink:1.17-java11
     container_name: flink-taskmanager
+    restart: unless-stopped
     depends_on:
       - flink-jobmanager
     command: taskmanager
@@ -122,10 +126,12 @@ services:
       context: ./scripts/flink
       dockerfile: Dockerfile
     container_name: flink-processor
+    restart: unless-stopped
     depends_on:
       - kafka
       - postgres
       - flink-jobmanager
+      - flink-taskmanager
     environment:
       KAFKA_BOOTSTRAP_SERVERS: kafka:29092
       POSTGRES_HOST: postgres
@@ -138,12 +144,14 @@ services:
         rest.bind-address: 0.0.0.0
 
   grafana:
-    image: grafana/grafana:latest
+    image: grafana/grafana:11.2.0
     container_name: grafana
     ports:
       - "3000:3000"
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD}
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
     volumes:
       - ./grafana/provisioning:/etc/grafana/provisioning
       - ./grafana/dashboards:/var/lib/grafana/dashboards

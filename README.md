@@ -96,6 +96,7 @@ Backend : http://localhost:8000/docs
 Airflow : http://localhost:8085 
 Flink   : http://localhost:8081
 Grafana : http://localhost:3000
+Kafka   : http://localhost:8086
 
 
 ## 数据库

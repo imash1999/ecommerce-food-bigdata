@@ -20,8 +20,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-# Переменные подключения берутся из окружения Docker Compose
 DB_HOST = os.getenv("POSTGRES_HOST", "postgres")
 DB_PORT = os.getenv("POSTGRES_PORT", "5432")
 DB_NAME = os.getenv("POSTGRES_DB", "postgres")
@@ -88,8 +86,6 @@ def verify_password(password: str, stored_hash: str) -> bool:
 @app.get("/")
 def root():
     return {"status": "ok", "message": "Food Delivery API is running"}
-
-# 1. Список ресторанов
 @app.get("/restaurants")
 def get_restaurants(limit: int = 20, offset: int = 0):
     conn = get_db_connection()
@@ -109,7 +105,6 @@ def get_restaurants(limit: int = 20, offset: int = 0):
         cursor.close()
         conn.close()
 
-# 2. Детали конкретного ресторана и его блюд
 @app.get("/restaurants/{restaurant_id}")
 def get_restaurant_details(restaurant_id: int):
     conn = get_db_connection()
@@ -135,7 +130,6 @@ def get_restaurant_details(restaurant_id: int):
         cursor.close()
         conn.close()
 
-# 3. Список пользователей
 @app.get("/users")
 def get_users(limit: int = 50):
     conn = get_db_connection()
@@ -350,7 +344,6 @@ def get_user_orders(user_id: int):
                 detail="User not found"
             )
 
-        # Get orders
         cursor.execute(
             """
             SELECT
@@ -451,7 +444,6 @@ def create_order(order_request: OrderRequest):
     cursor = conn.cursor()
 
     try:
-        # Check user
         cursor.execute(
             """
             SELECT id
@@ -467,7 +459,6 @@ def create_order(order_request: OrderRequest):
                 detail="User not found"
             )
 
-        # Check restaurant
         cursor.execute(
             """
             SELECT id
@@ -542,7 +533,6 @@ def create_order(order_request: OrderRequest):
         discount = 0
         total_amount = subtotal + delivery_fee - discount
 
-        # Create order
         cursor.execute(
             """
             INSERT INTO public.orders
@@ -583,8 +573,6 @@ def create_order(order_request: OrderRequest):
         )
 
         order = cursor.fetchone()
-
-        # Create order items
         for item in prepared_items:
             cursor.execute(
                 """

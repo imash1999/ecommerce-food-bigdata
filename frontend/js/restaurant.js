@@ -6,11 +6,6 @@ let dishes = [];
 let activeCategory = "all";
 let cart = loadCart();
 
-
-/* =========================
-   GET RESTAURANT ID
-   ========================= */
-
 function getRestaurantId() {
 
     const params =
@@ -20,11 +15,6 @@ function getRestaurantId() {
 
     return params.get("id");
 }
-
-
-/* =========================
-   LOAD RESTAURANT
-   ========================= */
 
 async function loadRestaurant() {
 
@@ -93,11 +83,6 @@ async function loadRestaurant() {
     }
 }
 
-
-/* =========================
-   RENDER RESTAURANT
-   ========================= */
-
 function renderRestaurant() {
 
     document.title =
@@ -153,11 +138,6 @@ function renderRestaurant() {
             "Address unavailable"
         }`;
 }
-
-
-/* =========================
-   CATEGORIES
-   ========================= */
 
 function renderCategories() {
 
@@ -300,11 +280,6 @@ function renderCategories() {
     );
 }
 
-
-/* =========================
-   FILTER DISHES
-   ========================= */
-
 function getFilteredDishes() {
 
     if (activeCategory === "all") {
@@ -318,11 +293,6 @@ function getFilteredDishes() {
             String(activeCategory)
     );
 }
-
-
-/* =========================
-   RENDER DISHES
-   ========================= */
 
 function renderDishes(data) {
 
@@ -379,11 +349,6 @@ function renderDishes(data) {
 
     });
 }
-
-
-/* =========================
-   CREATE DISH CARD
-   ========================= */
 
 function createDishCard(dish) {
 
@@ -474,11 +439,6 @@ function createDishCard(dish) {
     return card;
 }
 
-
-/* =========================
-   DISH EMOJI
-   ========================= */
-
 function getDishEmoji(name) {
 
     const text =
@@ -549,11 +509,6 @@ function getDishEmoji(name) {
     return "🍽️";
 }
 
-
-/* =========================
-   SEARCH DISHES
-   ========================= */
-
 function searchDishes(query) {
 
     const normalized =
@@ -593,11 +548,6 @@ function searchDishes(query) {
 
     renderDishes(filtered);
 }
-
-
-/* =========================
-   CART
-   ========================= */
 
    function loadCart() {
 
@@ -713,11 +663,6 @@ function updateCartBar() {
             : "none";
 }
 
-
-/* =========================
-   ERROR
-   ========================= */
-
 function showError() {
 
     document.getElementById(
@@ -735,11 +680,6 @@ function showError() {
     ).style.display = "block";
 }
 
-
-/* =========================
-   HTML ESCAPE
-   ========================= */
-
 function escapeHtml(value) {
 
     return String(value)
@@ -749,11 +689,6 @@ function escapeHtml(value) {
         .replaceAll('"', "&quot;")
         .replaceAll("'", "&#039;");
 }
-
-
-/* =========================
-   EVENTS
-   ========================= */
 
 document.addEventListener(
     "DOMContentLoaded",

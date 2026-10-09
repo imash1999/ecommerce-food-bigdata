@@ -3,10 +3,6 @@ const CART_KEY = "foodexpress_cart";
 let cart = [];
 
 
-/* =========================
-   LOAD CART
-   ========================= */
-
 function loadCart() {
 
     try {
@@ -32,11 +28,6 @@ function loadCart() {
     }
 }
 
-
-/* =========================
-   SAVE CART
-   ========================= */
-
 function saveCart() {
 
     localStorage.setItem(
@@ -44,11 +35,6 @@ function saveCart() {
         JSON.stringify(cart)
     );
 }
-
-
-/* =========================
-   RENDER CART
-   ========================= */
 
 function renderCart() {
 
@@ -110,11 +96,6 @@ function renderCart() {
 
     updateCartCount();
 }
-
-
-/* =========================
-   CREATE ITEM
-   ========================= */
 
 function createCartItem(
     item,
@@ -238,11 +219,6 @@ function createCartItem(
     return element;
 }
 
-
-/* =========================
-   QUANTITY
-   ========================= */
-
 function changeQuantity(
     index,
     amount
@@ -273,11 +249,6 @@ function changeQuantity(
     renderCart();
 }
 
-
-/* =========================
-   REMOVE
-   ========================= */
-
 function removeItem(index) {
 
     cart.splice(
@@ -289,11 +260,6 @@ function removeItem(index) {
 
     renderCart();
 }
-
-
-/* =========================
-   SUMMARY
-   ========================= */
 
 function updateSummary() {
 
@@ -310,13 +276,6 @@ function updateSummary() {
             },
             0
         );
-
-
-    /*
-     * Temporary fixed delivery fee.
-     * Later this will come from the
-     * restaurant/order logic.
-     */
 
     const deliveryFee =
         subtotal > 0
@@ -347,11 +306,6 @@ function updateSummary() {
         `$${total.toFixed(2)}`;
 }
 
-
-/* =========================
-   CART COUNT
-   ========================= */
-
 function updateCartCount() {
 
     const count =
@@ -368,11 +322,6 @@ function updateCartCount() {
     ).textContent =
         count;
 }
-
-
-/* =========================
-   DISH EMOJI
-   ========================= */
 
 function getDishEmoji(name) {
 
@@ -445,11 +394,6 @@ function getDishEmoji(name) {
     return "🍽️";
 }
 
-
-/* =========================
-   HTML ESCAPE
-   ========================= */
-
 function escapeHtml(value) {
 
     return String(value)
@@ -480,21 +424,11 @@ function checkout() {
     window.location.href = "checkout.html";
 }
 
-
-/* =========================
-   CHECKOUT
-   ========================= */
-
 const checkoutButton = document.getElementById("checkoutButton");
 
 if (checkoutButton) {
     checkoutButton.addEventListener("click", checkout);
 }
-
-
-/* =========================
-   START
-   ========================= */
 
 document.addEventListener(
     "DOMContentLoaded",

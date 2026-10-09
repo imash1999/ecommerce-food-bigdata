@@ -36,11 +36,6 @@ function showMessage(elementId, message, type) {
     element.className = `message ${type}`;
 }
 
-
-// ====================
-// LOGIN
-// ====================
-
 document.getElementById("loginForm").addEventListener("submit", async function (event) {
     event.preventDefault();
 
@@ -69,9 +64,6 @@ document.getElementById("loginForm").addEventListener("submit", async function (
             );
             return;
         }
-
-        // Store only user information.
-        // Never store the password.
         localStorage.setItem(
             "foodexpress_user",
             JSON.stringify(data.user)
@@ -97,11 +89,6 @@ document.getElementById("loginForm").addEventListener("submit", async function (
         );
     }
 });
-
-
-// ====================
-// REGISTER
-// ====================
 
 document.getElementById("registerForm").addEventListener("submit", async function (event) {
     event.preventDefault();

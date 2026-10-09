@@ -3,11 +3,6 @@ const API_BASE_URL = "http://localhost:8000";
 let restaurants = [];
 let currentCategory = "all";
 
-
-/* =========================
-   LOAD RESTAURANTS
-   ========================= */
-
 async function loadRestaurants() {
 
     showLoading();
@@ -41,11 +36,6 @@ async function loadRestaurants() {
 
     }
 }
-
-
-/* =========================
-   RENDER RESTAURANTS
-   ========================= */
 
 function renderRestaurants(data) {
 
@@ -97,11 +87,6 @@ function renderRestaurants(data) {
 
     });
 }
-
-
-/* =========================
-   CREATE CARD
-   ========================= */
 
 function createRestaurantCard(restaurant) {
 
@@ -200,10 +185,6 @@ function createRestaurantCard(restaurant) {
 }
 
 
-/* =========================
-   RESTAURANT EMOJI
-   ========================= */
-
 function getRestaurantEmoji(category) {
 
     const text =
@@ -253,11 +234,6 @@ function getRestaurantEmoji(category) {
 
     return "🍽️";
 }
-
-
-/* =========================
-   SEARCH
-   ========================= */
 
 function searchRestaurants(query) {
 
@@ -317,12 +293,6 @@ function searchRestaurants(query) {
 
     renderRestaurants(filtered);
 }
-
-
-/* =========================
-   CATEGORY FILTER
-   ========================= */
-
 function matchesCategory(
     restaurant,
     category
@@ -373,18 +343,10 @@ function matchesCategory(
 }
 
 
-/* =========================
-   OPEN RESTAURANT
-   ========================= */
-
    function openRestaurant(id) {
     window.location.href = `restaurant.html?id=${id}`;
 }
 
-
-/* =========================
-   LOADING / ERROR
-   ========================= */
 
 function showLoading() {
 
@@ -421,11 +383,6 @@ function showError() {
     ).textContent = "Error";
 }
 
-
-/* =========================
-   HTML ESCAPE
-   ========================= */
-
 function escapeHtml(value) {
 
     return String(value)
@@ -435,11 +392,6 @@ function escapeHtml(value) {
         .replaceAll('"', "&quot;")
         .replaceAll("'", "&#039;");
 }
-
-
-/* =========================
-   EVENTS
-   ========================= */
 
 document.addEventListener(
     "DOMContentLoaded",

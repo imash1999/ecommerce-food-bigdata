@@ -128,8 +128,6 @@ async function placeOrder() {
         alert("Please enter your delivery address.");
         return;
     }
-
-    // The current cart should belong to one restaurant.
     const restaurantIds = [
         ...new Set(
             cart.map(item => Number(item.dish.restaurant_id))
@@ -181,7 +179,6 @@ async function placeOrder() {
             );
         }
 
-        // Order was successfully saved in PostgreSQL.
         localStorage.removeItem("foodexpress_cart");
 
         localStorage.setItem(

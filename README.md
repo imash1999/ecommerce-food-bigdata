@@ -1,4 +1,5 @@
 # FoodExpress Analytics
+[![CI Pipeline](https://github.com/imash1999/ecommerce-food-bigdata/actions/workflows/ci.yml/badge.svg)](https://github.com/imash1999/ecommerce-food-bigdata/actions/workflows/ci.yml)
 
 ## 项目功能
 

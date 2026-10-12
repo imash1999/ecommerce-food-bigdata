@@ -1,0 +1,18 @@
+{
+    "gridPos": { "h": 8, "w": 24, "x": 0, "y": 41 },
+    "id": 12,
+    "title": "Top 10 Recommended Dishes",
+    "type": "barchart",
+    "datasource": { "type": "postgres", "uid": "PostgreSQL" },
+    "targets": [{
+      "datasource": { "type": "postgres", "uid": "PostgreSQL" },
+      "editorMode": "code", "format": "table", "rawQuery": true,
+      "rawSql": "SELECT dish_name, COUNT(*) AS recommendations FROM user_recommendations GROUP BY dish_name ORDER BY recommendations DESC LIMIT 10;",
+      "refId": "A"
+    }],
+    "options": { "orientation": "horizontal", "showValue": "always", "legend": { "showLegend": false } },
+    "fieldConfig": {
+      "defaults": { "color": { "mode": "palette-classic" } },
+      "overrides": []
+    }
+  }

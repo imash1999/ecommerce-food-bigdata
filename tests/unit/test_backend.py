@@ -235,3 +235,26 @@ class TestGetUserOrders:
         assert response.status_code == 200
         data = response.json()
         assert data["orders"] == []
+
+class TestRecommendations:
+    def test_recommendations_user_not_found(self, api_client, mock_get_db):
+        conn, cursor = mock_get_db
+        cursor.fetchone.return_value = None
+
+        response = api_client.get("/users/999/recommendations")
+        assert response.status_code == 404
+        assert "user not found" in response.json()["detail"].lower()
+
+    def test_recommendations_success(self, api_client, mock_get_db):
+        conn, cursor = mock_get_db
+        cursor.fetchone.return_value = {"id": 1}
+        cursor.fetchall.return_value = [
+            {"dish_id": 10, "dish_name": "Pizza", "score": 0.95, "rank": 1},
+            {"dish_id": 11, "dish_name": "Cola", "score": 0.87, "rank": 2},
+        ]
+
+        response = api_client.get("/users/1/recommendations?limit=5")
+        assert response.status_code == 200
+        data = response.json()
+        assert data["user_id"] == 1
+        assert len(data["recommendations"]) == 2

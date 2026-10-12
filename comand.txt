@@ -1,0 +1,18 @@
+cd scripts/spark/wheels
+rm *.whl
+
+pip download \
+  "numpy==1.24.4" \
+  "pandas==1.5.3" \
+  "scipy==1.10.1" \
+  python-dateutil pytz six tzdata \
+  --python-version 38 \
+  --only-binary=:all: \
+  --platform manylinux2014_x86_64 \
+  -d .
+
+ls -la scripts/spark/*.jar
+
+aws-java-sdk-bundle-1.12.262.jar
+hadoop-aws-3.3.4.jar
+postgresql-42.6.0.jar

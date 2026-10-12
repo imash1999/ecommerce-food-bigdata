@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For You - FoodExpress</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/for-you.css">
+</head>
+<body>
+
+<header class="topbar">
+    <div class="topbar-inner">
+
+        <a href="index.html" class="logo">
+            <span class="logo-icon">🍜</span>
+            <span>FoodExpress</span>
+        </a>
+
+        <div class="location">
+            <span>📍</span>
+            <span>Birmingham, AL</span>
+        </div>
+
+        <nav class="nav">
+            <a href="index.html" class="nav-link">Restaurants</a>
+            <a href="for-you.html" class="nav-link active">For You</a>
+            <a href="my-orders.html" class="nav-link">My Orders</a>
+            <a href="cart.html" class="nav-link">
+                Cart <span id="cartCount">0</span>
+            </a>
+            <span id="authArea" class="auth-area"></span>
+            <a href="auth.html" class="login-button">Sign in</a>
+        </nav>
+
+    </div>
+</header>
+
+
+<main class="for-you-page">
+
+    <div class="for-you-container">
+
+        <div class="page-header">
+            <p class="section-eyebrow">PERSONALIZED</p>
+            <h1>✨ For You</h1>
+            <p id="userGreeting" class="subtitle">
+                Loading your recommendations...
+            </p>
+        </div>
+
+        <div id="loadingState" class="state-message">
+            <div class="loading-spinner"></div>
+            <p>Generating recommendations...</p>
+        </div>
+
+        <div id="errorState" class="state-message error" hidden></div>
+
+        <div id="emptyState" class="state-message empty" hidden>
+            <h2>No recommendations yet</h2>
+            <p>Place some orders and we'll find the best dishes for you.</p>
+            <a href="index.html" class="browse-button">
+                Browse Restaurants
+            </a>
+        </div>
+
+        <div id="recommendationsList" class="recommendations-list"></div>
+
+    </div>
+
+</main>
+
+
+<footer class="footer">
+    <div class="footer-inner">
+        <div>
+            <div class="footer-logo">🍜 FoodExpress</div>
+            <p>Powered by Spark ALS (Collaborative Filtering)</p>
+        </div>
+        <div class="footer-tech">
+            <span>Powered by</span>
+            <strong>Spark ML</strong>
+            <strong>PostgreSQL</strong>
+        </div>
+    </div>
+</footer>
+
+
+<script src="js/for-you.js"></script>
+
+</body>
+</html>

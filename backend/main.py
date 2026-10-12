@@ -616,3 +616,52 @@ def create_order(order_request: OrderRequest):
     finally:
         cursor.close()
         conn.close()
+
+@app.get("/users/{user_id}/recommendations")
+def get_user_recommendations(user_id: int, limit: int = 5):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute(
+            "SELECT id FROM public.users WHERE id = %s;",
+            (user_id,)
+        )
+        if not cursor.fetchone():
+            raise HTTPException(status_code=404, detail="User not found")
+
+        cursor.execute("""
+            SELECT dish_id, dish_name, image_url, score, rank
+            FROM public.user_recommendations
+            WHERE user_id = %s
+            ORDER BY rank
+            LIMIT %s;
+        """, (user_id, limit))
+
+        recommendations = cursor.fetchall()
+
+        cursor.execute("""
+            SELECT
+                d.id AS dish_id,
+                d.name AS dish_name,
+                d.image_url,
+                COUNT(oi.id)::float AS score,
+                0 AS rank
+            FROM public.dishes d
+            LEFT JOIN public.order_items oi ON oi.dish_id = d.id
+            GROUP BY d.id, d.name, d.image_url
+            ORDER BY score DESC, d.id
+            LIMIT %s;
+        """, (limit,))
+
+        return {
+            "user_id": user_id,
+            "recommendations": recommendations
+        }
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Query error: {str(e)}")
+    finally:
+        cursor.close()
+        conn.close()

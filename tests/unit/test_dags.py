@@ -48,7 +48,7 @@ class TestRFMDag:
         assert dag.catchup is False
 
     def test_tags(self, dag):
-        for tag in ("pyspark", "minio", "rfm", "postgres"):
+        for tag in ("pyspark", "seaweedfs", "rfm", "postgres", "s3"):
             assert tag in dag.tags
 
     def test_owner(self, dag):

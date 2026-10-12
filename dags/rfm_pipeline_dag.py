@@ -17,7 +17,7 @@ with DAG(
     dag_id='rfm_segmentation_daily',
     default_args=default_args,
     description='每日从 MinIO 数据湖（PostgreSQL）进行 RFM 用户细分计算。',
-    schedule_interval='0 2 * * *',
+    schedule='0 2 * * *',  # ← было schedule_interval
     start_date=datetime(2026, 1, 1),
     catchup=False,
     tags=['pyspark', 'minio', 'rfm', 'postgres'],

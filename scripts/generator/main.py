@@ -4,7 +4,7 @@ import time
 import os
 import html
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 
 import psycopg2
 import boto3
@@ -140,8 +140,10 @@ def generate_order_event():
         "items": items,
         "total_amount": round(total_amount, 2),
         "status": "created",
-        "timestamp": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+        "timestamp": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
     }
+    return event
+    return event
     return event
 
 
@@ -175,8 +177,10 @@ def generate_ecommerce_event():
         "category": "dishes",
         "action": action,
         "price": price if action == "buy" else 0.0,
-        "timestamp": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+        "timestamp": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
     }
+    return event
+    return event
     return event
 
 if __name__ == "__main__":

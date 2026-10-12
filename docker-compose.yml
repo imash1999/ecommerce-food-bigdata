@@ -175,6 +175,8 @@ services:
       - AIRFLOW__WEBSERVER__SECRET_KEY=secret_key_for_airflow_logs_12345
       - AIRFLOW__CORE__LOAD_EXAMPLES=False
       - DOCKER_API_VERSION=1.44
+      - TELEGRAM_TOKEN=${TELEGRAM_TOKEN}
+      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./dags:/opt/airflow/dags
@@ -202,6 +204,8 @@ services:
       - AIRFLOW__WEBSERVER__SECRET_KEY=secret_key_for_airflow_logs_12345
       - AIRFLOW__CORE__LOAD_EXAMPLES=False
       - DOCKER_API_VERSION=1.44
+      - TELEGRAM_TOKEN=${TELEGRAM_TOKEN}
+      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./dags:/opt/airflow/dags

@@ -71,5 +71,5 @@ def main():
         GROUP BY TUMBLE(`timestamp`, INTERVAL '1' MINUTE)
     """)
 
-if __name__ == "__main__":
-    main()docker build -t ecommerce-generator:latest C:\Users\Iman\ecommerce-bigdata-analytics\scripts\generatordocker build -t ecommerce-generator:latest C:\Users\Iman\ecommerce-bigdata-analytics\scripts\generator
+iif __name__ == "__main__":
+    main()

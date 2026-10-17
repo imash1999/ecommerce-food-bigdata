@@ -174,6 +174,9 @@ services:
       - AIRFLOW__CORE__FERNET_KEY=93DTwddVTo03V7KIWyFs9m-aN1VN4d9gqVIHiz4pyTs=
       - AIRFLOW__WEBSERVER__SECRET_KEY=secret_key_for_airflow_logs_12345
       - AIRFLOW__CORE__LOAD_EXAMPLES=False
+      - AIRFLOW__API__AUTH_BACKENDS=airflow.api.auth.backend.session,airflow.api.auth.backend.basic_auth
+      - AIRFLOW_API_USERNAME=${AIRFLOW_API_USERNAME}
+      - AIRFLOW_API_PASSWORD=${AIRFLOW_API_PASSWORD}
       - DOCKER_API_VERSION=1.44
       - TELEGRAM_TOKEN=${TELEGRAM_TOKEN}
       - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
@@ -203,6 +206,7 @@ services:
       - AIRFLOW__CORE__FERNET_KEY=93DTwddVTo03V7KIWyFs9m-aN1VN4d9gqVIHiz4pyTs=
       - AIRFLOW__WEBSERVER__SECRET_KEY=secret_key_for_airflow_logs_12345
       - AIRFLOW__CORE__LOAD_EXAMPLES=False
+      - AIRFLOW__API__AUTH_BACKENDS=airflow.api.auth.backend.session,airflow.api.auth.backend.basic_auth
       - DOCKER_API_VERSION=1.44
       - TELEGRAM_TOKEN=${TELEGRAM_TOKEN}
       - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
@@ -236,6 +240,10 @@ services:
       POSTGRES_DB: postgres
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: root
+      ADMIN_SESSION_SECRET: ${ADMIN_SESSION_SECRET}
+      AIRFLOW_API_BASE_URL: http://airflow-webserver:8080/api/v1
+      AIRFLOW_API_USERNAME: ${AIRFLOW_API_USERNAME}
+      AIRFLOW_API_PASSWORD: ${AIRFLOW_API_PASSWORD}
 
   frontend:
     image: python:3.12-slim

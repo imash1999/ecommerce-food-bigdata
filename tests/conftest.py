@@ -12,6 +12,14 @@ sys.path.insert(0, DAGS)
 sys.path.insert(0, BACKEND)
 
 
+@pytest.fixture(autouse=True)
+def test_session_secret(monkeypatch):
+    monkeypatch.setenv(
+        "ADMIN_SESSION_SECRET",
+        "test-only-secret-for-admin-session-tests-0123456789",
+    )
+
+
 @pytest.fixture
 def mock_cursor():
     cursor = MagicMock()

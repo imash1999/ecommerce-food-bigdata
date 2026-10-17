@@ -50,7 +50,8 @@ document.getElementById("loginForm").addEventListener("submit", async function (
                 password: password
             }),
             {
-                method: "POST"
+                method: "POST",
+                credentials: "include"
             }
         );
 

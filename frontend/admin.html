@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodExpress — Admin Panel</title>
+    <link rel="stylesheet" href="css/admin.css">
+    <script src="js/admin.js" defer></script>
+</head>
+<body>
+    <header class="topbar">
+        <div>
+            <h1>FoodExpress Admin</h1>
+            <p>Restaurant and menu management</p>
+        </div>
+        <div class="top-actions">
+            <a href="index.html">View storefront</a>
+            <button id="logoutBtn" class="secondary">Log out</button>
+        </div>
+    </header>
+
+    <main class="container">
+        <div id="notice" class="notice" role="status" aria-live="polite"></div>
+        
+        <section class="panel">
+            <div class="section-heading">
+                <div>
+                    <h2>Training &amp; Data Pipelines</h2>
+                    <p>Run the existing Airflow training pipelines.</p>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button id="runRecommendationsBtn" type="button">
+                    Run Recommendations
+                </button>
+
+                <button id="runRfmBtn" type="button">
+                    Run RFM Segmentation
+                </button>
+            </div>
+
+            <p id="trainingStatus" role="status" aria-live="polite">
+                Ready to run a pipeline.
+            </p>
+        </section>
+
+
+        <section class="panel">
+            <div class="section-heading">
+                <div>
+                    <h2>Restaurants</h2>
+                    <p>Create, edit and disable restaurants.</p>
+                </div>
+                <button id="newRestaurantBtn">New restaurant</button>
+            </div>
+
+            <form id="restaurantForm" class="editor hidden">
+                <h3 id="restaurantFormTitle">New restaurant</h3>
+                <input type="hidden" id="restaurantId">
+
+                <div class="form-grid">
+                    <label>Name *
+                        <input id="restaurantName" required maxlength="255">
+                    </label>
+                    <label>Category
+                        <input id="restaurantCategory" maxlength="255">
+                    </label>
+                    <label>Price range
+                        <input id="restaurantPriceRange" maxlength="10" placeholder="$$">
+                    </label>
+                    <label>Address
+                        <input id="restaurantAddress">
+                    </label>
+                    <label>ZIP code
+                        <input id="restaurantZip">
+                    </label>
+                    <label>Image URL
+                        <input id="restaurantImage" type="url">
+                    </label>
+                    <label>Rating (0–5)
+                        <input id="restaurantRating" type="number" min="0" max="5" step="0.1">
+                    </label>
+                    <label>Rating count
+                        <input id="restaurantRatingCount" type="number" min="0" step="1">
+                    </label>
+                    <label class="wide">Description
+                        <textarea id="restaurantDescription" rows="3"></textarea>
+                    </label>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit">Save restaurant</button>
+                    <button type="button" id="cancelRestaurantBtn" class="secondary">Cancel</button>
+                </div>
+            </form>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="restaurantsBody">
+                        <tr><td colspan="5">Loading restaurants…</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="section-heading">
+                <div>
+                    <h2>Dishes</h2>
+                    <p id="selectedRestaurantLabel">Select a restaurant to manage its dishes.</p>
+                </div>
+                <button id="newDishBtn" disabled>New dish</button>
+            </div>
+
+            <form id="dishForm" class="editor hidden">
+                <h3 id="dishFormTitle">New dish</h3>
+                <input type="hidden" id="dishId">
+
+                <div class="form-grid">
+                    <label>Dish name *
+                        <input id="dishName" required maxlength="255">
+                    </label>
+                    <label>Price *
+                        <input id="dishPrice" type="number" min="0.01" step="0.01" required>
+                    </label>
+                    <label>Category ID
+                        <input id="dishCategoryId" type="number" min="1">
+                    </label>
+                    <label>Image URL
+                        <input id="dishImage" type="url">
+                    </label>
+                    <label class="wide">Description
+                        <textarea id="dishDescription" rows="3"></textarea>
+                    </label>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit">Save dish</button>
+                    <button type="button" id="cancelDishBtn" class="secondary">Cancel</button>
+                </div>
+            </form>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dishesBody">
+                        <tr><td colspan="5">Select a restaurant first.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

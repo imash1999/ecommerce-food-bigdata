@@ -509,26 +509,46 @@ document.addEventListener(
     }
 );
 
-function updateAuthUI() {
+
+async function updateAuthUI() {
     const authArea = document.getElementById("authArea");
 
     if (!authArea) {
         return;
     }
 
-    const savedUser = localStorage.getItem("foodexpress_user");
-
-    if (!savedUser) {
-        authArea.innerHTML = `
-            <a href="auth.html" class="nav-link">
-                Login / Register
-            </a>
-        `;
-        return;
-    }
-
     try {
-        const user = JSON.parse(savedUser);
+        const response = await fetch(
+            `${API_BASE_URL}/auth/me`,
+            {
+                method: "GET",
+                credentials: "include",
+            }
+        );
+
+        if (response.status === 401) {
+            localStorage.removeItem("foodexpress_user");
+
+            authArea.innerHTML = `
+                <a href="auth.html" class="nav-link">
+                    Login / Register
+                </a>
+            `;
+            return;
+        }
+
+        if (!response.ok) {
+            throw new Error(
+                `Authentication check failed: ${response.status}`
+            );
+        }
+
+        const user = await response.json();
+
+        localStorage.setItem(
+            "foodexpress_user",
+            JSON.stringify(user)
+        );
 
         const displayName =
             user.name ||
@@ -539,6 +559,13 @@ function updateAuthUI() {
             <span class="welcome-user">
                 Welcome, ${escapeHtml(displayName)}
             </span>
+
+            ${
+                user.is_admin === true
+                    ? '<a href="admin.html" class="nav-link">Admin Panel</a>'
+                    : ""
+            }
+
             <button
                 class="logout-button"
                 onclick="logout()"
@@ -546,22 +573,47 @@ function updateAuthUI() {
                 Logout
             </button>
         `;
-    } catch (error) {
-        console.error("Failed to read user session:", error);
 
-        localStorage.removeItem("foodexpress_user");
+    } catch (error) {
+        console.error(
+            "Failed to verify user session:",
+            error
+        );
 
         authArea.innerHTML = `
             <a href="auth.html" class="nav-link">
-                Login / Register
+                Sign in again
             </a>
         `;
     }
 }
 
-function logout() {
-    localStorage.removeItem("foodexpress_user");
-    window.location.reload();
+
+
+async function logout() {
+    try {
+        const response = await fetch(
+            `${API_BASE_URL}/auth/logout`,
+            {
+                method: "POST",
+                credentials: "include",
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error(
+                `Logout failed: ${response.status}`
+            );
+        }
+
+        localStorage.removeItem("foodexpress_user");
+        window.location.reload();
+
+    } catch (error) {
+        console.error("Logout failed:", error);
+        alert("Could not log out. Please try again.");
+    }
 }
+
 
 updateAuthUI();

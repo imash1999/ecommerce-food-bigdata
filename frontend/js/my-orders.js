@@ -154,7 +154,9 @@ async function loadOrders() {
 
     try {
         const response = await fetch(
-            `${API_BASE_URL}/users/${Number(currentUser.id)}/orders`
+            `${API_BASE_URL}/users/${Number(currentUser.id)}/orders`,{
+                credentials: "include"
+            }
         );
 
         const data = await response.json();

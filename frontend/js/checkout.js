@@ -154,6 +154,37 @@ async function placeOrder() {
     button.disabled = true;
     button.textContent = "Placing order...";
 
+    const requestFingerprint = JSON.stringify({
+        restaurant_id: restaurantId,
+        delivery_address: address,
+        items: items
+    });
+
+    let pendingOrder;
+
+    try {
+        pendingOrder = JSON.parse(
+            sessionStorage.getItem("foodexpress_pending_order")
+        );
+    } catch {
+        pendingOrder = null;
+    }
+
+    if (
+        !pendingOrder ||
+        pendingOrder.fingerprint !== requestFingerprint
+    ) {
+        pendingOrder = {
+            key: crypto.randomUUID(),
+            fingerprint: requestFingerprint
+        };
+
+        sessionStorage.setItem(
+            "foodexpress_pending_order",
+            JSON.stringify(pendingOrder)
+        );
+    }
+
     try {
         const response = await fetch(`${API_BASE_URL}/orders`, {
             method: "POST",
@@ -164,7 +195,8 @@ async function placeOrder() {
             body: JSON.stringify({
                     restaurant_id: restaurantId,
                     delivery_address: address,
-                    items: items
+                    items: items,
+                    idempotency_key: pendingOrder.key
                 })
             }
         );
@@ -178,6 +210,7 @@ async function placeOrder() {
         }
 
         localStorage.removeItem("foodexpress_cart");
+        sessionStorage.removeItem("foodexpress_pending_order");
 
         localStorage.setItem(
             "foodexpress_last_order",

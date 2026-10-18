@@ -7,6 +7,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends curl \
 COPY lib/*.jar /opt/flink/lib/
 COPY postgresql-42.6.0.jar /opt/flink/lib/postgresql-42.6.0.jar
 COPY submit.sql /opt/flink/submit.sql
+COPY submit_events.sql /opt/flink/submit_events.sql
 COPY submit-and-watch.sh /opt/flink/submit-and-watch.sh
 RUN chmod +x /opt/flink/submit-and-watch.sh
 

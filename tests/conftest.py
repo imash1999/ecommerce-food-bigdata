@@ -47,3 +47,22 @@ def api_client():
     from fastapi.testclient import TestClient
     from backend.main import app
     return TestClient(app)
+
+@pytest.fixture
+def authenticated_api_client():
+    from fastapi.testclient import TestClient
+    from backend.main import app, get_current_user
+
+    app.dependency_overrides[get_current_user] = lambda: {
+        "id": 1,
+        "username": "user1",
+        "email": "user1@example.com",
+        "name": "User One",
+        "is_admin": False,
+    }
+
+    try:
+        with TestClient(app) as client:
+            yield client
+    finally:
+        app.dependency_overrides.pop(get_current_user, None)

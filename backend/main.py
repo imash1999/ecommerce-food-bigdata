@@ -4,11 +4,29 @@ import hmac
 import secrets
 import base64
 import json
+from decimal import Decimal
 import time
 import urllib.request
 import urllib.error
 from fastapi import Depends, FastAPI, HTTPException, Request, Response
-from pydantic import BaseModel
+try:
+    from .schemas import (
+        RestaurantCreate,
+        RestaurantUpdate,
+        DishCreate,
+        DishUpdate,
+        OrderItemRequest,
+        OrderRequest,
+    )
+except ImportError:
+    from schemas import (
+        RestaurantCreate,
+        RestaurantUpdate,
+        DishCreate,
+        DishUpdate,
+        OrderItemRequest,
+        OrderRequest,
+    )
 from fastapi.middleware.cors import CORSMiddleware
 import psycopg2
 from psycopg2.extras import RealDictCursor
@@ -235,15 +253,37 @@ def get_restaurant_details(restaurant_id: int):
         conn.close()
 
 @app.get("/users")
-def get_users(limit: int = 50):
+def get_users(
+    limit: int = 50,
+    _admin: dict = Depends(require_admin),
+):
+    if not 1 <= limit <= 100:
+        raise HTTPException(
+            status_code=400,
+            detail="Limit must be between 1 and 100",
+        )
+
     conn = get_db_connection()
     cursor = conn.cursor()
+
     try:
-        cursor.execute("SELECT * FROM public.users LIMIT %s;", (limit,))
-        users = cursor.fetchall()
-        return {"users": users}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Query error: {str(e)}")
+        cursor.execute(
+            """
+            SELECT id, username, email, name, is_admin, created_at
+            FROM public.users
+            ORDER BY id
+            LIMIT %s;
+            """,
+            (limit,),
+        )
+        return {"users": cursor.fetchall()}
+
+    except Exception:
+        raise HTTPException(
+            status_code=500,
+            detail="Failed to retrieve users",
+        )
+
     finally:
         cursor.close()
         conn.close()
@@ -507,53 +547,6 @@ def get_current_user(request: Request):
         cursor.close()
         conn.close()
 
-
-class RestaurantCreate(BaseModel):
-    name: str
-    description: str | None = None
-    category: str | None = None
-    price_range: str | None = None
-    rating: float | None = None
-    rating_count: int | None = None
-    address: str | None = None
-    zip_code: str | None = None
-    latitude: float | None = None
-    longitude: float | None = None
-    image_url: str | None = None
-
-
-class RestaurantUpdate(BaseModel):
-    name: str | None = None
-    description: str | None = None
-    category: str | None = None
-    price_range: str | None = None
-    rating: float | None = None
-    rating_count: int | None = None
-    address: str | None = None
-    zip_code: str | None = None
-    latitude: float | None = None
-    longitude: float | None = None
-    image_url: str | None = None
-    is_active: bool | None = None
-
-
-class DishCreate(BaseModel):
-    name: str
-    price: float
-    description: str | None = None
-    category_id: int | None = None
-    image_url: str | None = None
-
-
-class DishUpdate(BaseModel):
-    name: str | None = None
-    price: float | None = None
-    description: str | None = None
-    category_id: int | None = None
-    image_url: str | None = None
-    is_available: bool | None = None
-
-
 def admin_db(sql: str, params=(), fetch: str | None = None):
     conn = None
     try:
@@ -728,8 +721,6 @@ def admin_update_restaurant(
     data = body.dict(exclude_unset=True)
     if not data:
         raise HTTPException(status_code=400, detail="No fields supplied")
-    if any(value is None for value in data.values() if False):
-        raise HTTPException(status_code=400, detail="Invalid field value")
     if "name" in data and (data["name"] is None or not data["name"].strip()):
         raise HTTPException(status_code=400, detail="Restaurant name cannot be empty")
     if "is_active" in data and data["is_active"] is None:
@@ -993,57 +984,124 @@ def get_user_orders(
         conn.close()
 
 
-class OrderItemRequest(BaseModel):
-    dish_id: int
-    quantity: int
-
-
-class OrderRequest(BaseModel):
-    restaurant_id: int
-    delivery_address: str
-    items: list[OrderItemRequest]
-
 @app.post("/orders")
 def create_order(
     order_request: OrderRequest,
-    current_user: dict = Depends(get_current_user)
+    current_user: dict = Depends(get_current_user),
 ):
     user_id = current_user["id"]
     restaurant_id = order_request.restaurant_id
-    delivery_address = order_request.delivery_address
+    delivery_address = order_request.delivery_address.strip()
+    idempotency_key = str(order_request.idempotency_key)
+
     items = order_request.items
-    
-    if not delivery_address.strip():
+
+    if not delivery_address:
         raise HTTPException(
             status_code=400,
-            detail="Delivery address is required"
+            detail="Delivery address is required",
         )
 
     if not items:
         raise HTTPException(
             status_code=400,
-            detail="Order must contain at least one item"
+            detail="Order must contain at least one item",
         )
+
+    # Одинаковые данные заказа дают одинаковый SHA-256 fingerprint.
+    request_payload = {
+        "restaurant_id": restaurant_id,
+        "delivery_address": delivery_address,
+        "items": [
+            {
+                "dish_id": item.dish_id,
+                "quantity": item.quantity,
+            }
+            for item in items
+        ],
+    }
+
+    request_hash = hashlib.sha256(
+        json.dumps(
+            request_payload,
+            sort_keys=True,
+            separators=(",", ":"),
+        ).encode("utf-8")
+    ).hexdigest()
 
     conn = get_db_connection()
     conn.autocommit = False
     cursor = conn.cursor()
 
-    try:
+    def find_existing_order():
         cursor.execute(
             """
-            SELECT id
-            FROM public.users
-            WHERE id = %s;
+            SELECT
+                id,
+                user_id,
+                restaurant_id,
+                status,
+                subtotal,
+                delivery_fee,
+                discount,
+                total_amount,
+                delivery_address,
+                created_at,
+                request_hash
+            FROM public.orders
+            WHERE user_id = %s
+              AND idempotency_key = %s;
             """,
-            (user_id,)
+            (user_id, idempotency_key),
+        )
+
+        existing_order = cursor.fetchone()
+
+        if not existing_order:
+            return None
+
+        if existing_order["request_hash"] != request_hash:
+            raise HTTPException(
+                status_code=409,
+                detail="Idempotency key was already used with different order data",
+            )
+
+        cursor.execute(
+            """
+            SELECT dish_id, quantity, unit_price, subtotal
+            FROM public.order_items
+            WHERE order_id = %s
+            ORDER BY id;
+            """,
+            (existing_order["id"],),
+        )
+
+        existing_items = cursor.fetchall()
+        existing_order.pop("request_hash", None)
+
+        return {
+            "message": "Order already exists",
+            "order": existing_order,
+            "items": existing_items,
+        }
+
+    try:
+        cursor.execute(
+            "SELECT id FROM public.users WHERE id = %s;",
+            (user_id,),
         )
 
         if not cursor.fetchone():
             raise HTTPException(
                 status_code=404,
-                detail="User not found"
+                detail="User not found",
             )
+
+        existing_result = find_existing_order()
+
+        if existing_result is not None:
+            conn.commit()
+            return existing_result
 
         cursor.execute(
             """
@@ -1051,16 +1109,16 @@ def create_order(
             FROM public.restaurants
             WHERE id = %s AND is_active = true;
             """,
-            (restaurant_id,)
+            (restaurant_id,),
         )
 
         if not cursor.fetchone():
             raise HTTPException(
                 status_code=404,
-                detail="Restaurant not found"
+                detail="Restaurant not found",
             )
 
-        subtotal = 0
+        subtotal = Decimal("0.00")
         prepared_items = []
 
         for item in items:
@@ -1069,9 +1127,8 @@ def create_order(
 
             if quantity <= 0:
                 raise HTTPException(
-                    
                     status_code=400,
-                    detail="Quantity must be greater than 0"
+                    detail="Quantity must be greater than 0",
                 )
 
             cursor.execute(
@@ -1080,60 +1137,61 @@ def create_order(
                 FROM public.dishes
                 WHERE id = %s;
                 """,
-                (dish_id,)
+                (dish_id,),
             )
-
             dish = cursor.fetchone()
 
             if not dish:
                 raise HTTPException(
                     status_code=404,
-                    detail=f"Dish {dish_id} not found"
+                    detail=f"Dish {dish_id} not found",
                 )
 
             if dish["restaurant_id"] != restaurant_id:
                 raise HTTPException(
                     status_code=400,
-                    detail=f"Dish {dish_id} does not belong to this restaurant"
+                    detail=f"Dish {dish_id} does not belong to this restaurant",
                 )
 
             if not dish["is_available"]:
                 raise HTTPException(
                     status_code=400,
-                    detail=f"Dish {dish_id} is not available"
+                    detail=f"Dish {dish_id} is not available",
                 )
 
-            unit_price = float(dish["price"])
+            unit_price = Decimal(str(dish["price"]))
             item_subtotal = unit_price * quantity
-
             subtotal += item_subtotal
 
             prepared_items.append({
                 "dish_id": dish_id,
                 "quantity": quantity,
                 "unit_price": unit_price,
-                "subtotal": item_subtotal
+                "subtotal": item_subtotal,
             })
 
-        delivery_fee = 2.99
-        discount = 0
+        delivery_fee = Decimal("2.99")
+        discount = Decimal("0.00")
         total_amount = subtotal + delivery_fee - discount
 
         cursor.execute(
             """
-            INSERT INTO public.orders
-                (
-                    user_id,
-                    restaurant_id,
-                    status,
-                    subtotal,
-                    delivery_fee,
-                    discount,
-                    total_amount,
-                    delivery_address
-                )
-            VALUES
-                (%s, %s, %s, %s, %s, %s, %s, %s)
+            INSERT INTO public.orders (
+                user_id,
+                restaurant_id,
+                status,
+                subtotal,
+                delivery_fee,
+                discount,
+                total_amount,
+                delivery_address,
+                idempotency_key,
+                request_hash
+            )
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            ON CONFLICT (user_id, idempotency_key)
+                WHERE idempotency_key IS NOT NULL
+            DO NOTHING
             RETURNING
                 id,
                 user_id,
@@ -1154,58 +1212,81 @@ def create_order(
                 delivery_fee,
                 discount,
                 total_amount,
-                delivery_address.strip()
-            )
+                delivery_address,
+                idempotency_key,
+                request_hash,
+            ),
         )
 
         order = cursor.fetchone()
+
+        if order is None:
+            existing_result = find_existing_order()
+
+            if existing_result is None:
+                raise HTTPException(
+                    status_code=500,
+                    detail="Unable to verify the existing order",
+                )
+
+            conn.commit()
+            return existing_result
+
         for item in prepared_items:
             cursor.execute(
                 """
-                INSERT INTO public.order_items
-                    (
-                        order_id,
-                        dish_id,
-                        quantity,
-                        unit_price,
-                        subtotal
-                    )
-                VALUES
-                    (%s, %s, %s, %s, %s);
+                INSERT INTO public.order_items (
+                    order_id,
+                    dish_id,
+                    quantity,
+                    unit_price,
+                    subtotal
+                )
+                VALUES (%s, %s, %s, %s, %s);
                 """,
                 (
                     order["id"],
                     item["dish_id"],
                     item["quantity"],
                     item["unit_price"],
-                    item["subtotal"]
-                )
+                    item["subtotal"],
+                ),
             )
+
         conn.commit()
 
         return {
             "message": "Order created successfully",
             "order": order,
-            "items": prepared_items
+            "items": prepared_items,
         }
 
     except HTTPException:
         conn.rollback()
         raise
 
-    except Exception as e:
+    except Exception:
         conn.rollback()
+        import logging
+        logging.exception("Order creation failed")
+
         raise HTTPException(
             status_code=500,
-            detail=f"Order creation error: {str(e)}"
+            detail="Failed to create order",
         )
 
     finally:
         cursor.close()
         conn.close()
 
+
 @app.get("/users/{user_id}/recommendations")
 def get_user_recommendations(user_id: int, limit: int = 5):
+    if not 1 <= limit <= 100:
+        raise HTTPException(
+            status_code=400,
+            detail="Limit must be between 1 and 100",
+        )
     conn = get_db_connection()
     cursor = conn.cursor()
     try:
@@ -1239,6 +1320,10 @@ def get_user_recommendations(user_id: int, limit: int = 5):
             ORDER BY score DESC, d.id
             LIMIT %s;
         """, (limit,))
+        popular_dishes = cursor.fetchall()
+
+        if not recommendations:
+            recommendations = popular_dishes
 
         return {
             "user_id": user_id,

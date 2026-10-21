@@ -159,7 +159,7 @@ function renderCategories() {
 
             categories.set(
                 dish.category_id,
-                `Category ${dish.category_id}`
+                dish.category_name || "Other"
             );
 
         }
@@ -324,7 +324,13 @@ function renderDishes(data) {
     title.textContent =
         activeCategory === "all"
             ? "All dishes"
-            : `Category ${activeCategory}`;
+            : (
+                dishes.find(
+                    dish =>
+                        String(dish.category_id) ===
+                        String(activeCategory)
+                )?.category_name || "Other"
+            );
 
 
     if (!data.length) {

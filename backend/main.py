@@ -237,7 +237,17 @@ def get_restaurant_details(restaurant_id: int):
         if not restaurant:
             raise HTTPException(status_code=404, detail="Restaurant not found")
             
-        cursor.execute("SELECT * FROM public.dishes WHERE restaurant_id = %s;", (restaurant_id,))
+        cursor.execute("""
+            SELECT
+                d.*,
+                mc.name AS category_name
+            FROM public.dishes AS d
+            LEFT JOIN public.menu_categories AS mc
+                ON mc.id = d.category_id
+                AND mc.restaurant_id = d.restaurant_id
+            WHERE d.restaurant_id = %s
+            ORDER BY d.id;
+        """, (restaurant_id,))
         dishes = cursor.fetchall()
         
         return {

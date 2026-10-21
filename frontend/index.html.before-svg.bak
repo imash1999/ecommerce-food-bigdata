@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>FoodExpress</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<header class="topbar">
+    <div class="topbar-inner">
+
+        <a href="/" class="logo">
+            <span class="logo-icon">🍜</span>
+            <span>FoodExpress</span>
+        </a>
+
+        <div class="location">
+            <span>📍</span>
+            <span>Birmingham, AL</span>
+        </div>
+
+        <div class="search-box">
+            <span class="search-icon"></span>
+            <input
+                id="searchInput"
+                type="text"
+                placeholder="Search restaurants or food..."
+            >
+        </div>
+
+        <nav class="nav">
+            <a href="for-you.html" class="nav-link">For You</a>
+            <a href="my-orders.html" class="nav-link">My Orders</a>
+            <a href="#" class="nav-link">Cart <span id="cartCount">0</span></a>
+            <span id="authArea" class="auth-area"></span>
+            <a href="auth.html" class="login-button">Sign in</a>
+        </nav>
+
+    </div>
+</header>
+
+
+<main>
+
+    <section class="hero">
+        <div class="hero-content">
+            <div>
+                <p class="hero-label">FOOD DELIVERY</p>
+
+                <h1>
+                    Delicious food,<br>
+                    delivered to you.
+                </h1>
+
+                <p class="hero-description">
+                    Discover restaurants and dishes from your local area.
+                </p>
+
+                <div class="hero-search">
+                    <span>📍</span>
+                    <input
+                        id="heroSearchInput"
+                        type="text"
+                        placeholder="What are you craving?"
+                    >
+                    <button id="heroSearchButton">Search</button>
+                </div>
+            </div>
+
+            <div class="hero-decoration">
+                🍕
+            </div>
+        </div>
+    </section>
+
+
+    <section class="categories-section">
+
+        <div class="section-header">
+            <div>
+                <p class="section-eyebrow">EXPLORE</p>
+                <h2>What are you craving?</h2>
+            </div>
+        </div>
+
+        <div class="categories" id="categories">
+            <button class="category active" data-category="all">
+                <span>🍽️</span>
+                <strong>All</strong>
+            </button>
+
+            <button class="category" data-category="pizza">
+                <span>🍕</span>
+                <strong>Pizza</strong>
+            </button>
+
+            <button class="category" data-category="burger">
+                <span>🍔</span>
+                <strong>Burgers</strong>
+            </button>
+
+            <button class="category" data-category="asian">
+                <span>🍜</span>
+                <strong>Asian</strong>
+            </button>
+
+            <button class="category" data-category="coffee">
+                <span>☕</span>
+                <strong>Coffee</strong>
+            </button>
+
+            <button class="category" data-category="sandwich">
+                <span>🥪</span>
+                <strong>Sandwiches</strong>
+            </button>
+        </div>
+
+    </section>
+
+
+    <section class="restaurants-section">
+
+        <div class="section-header restaurants-header">
+
+            <div>
+                <p class="section-eyebrow">NEAR YOU</p>
+                <h2>Restaurants</h2>
+            </div>
+
+            <div class="result-info" id="resultInfo">
+                Loading...
+            </div>
+
+        </div>
+
+
+        <div id="loading" class="loading">
+            <div class="loading-spinner"></div>
+            <p>Loading restaurants...</p>
+        </div>
+
+
+        <div
+            id="error"
+            class="error-message"
+            style="display: none;"
+        >
+            <strong>Unable to load restaurants.</strong>
+            <p>Please make sure the backend is running.</p>
+            <button id="retryButton">Try again</button>
+        </div>
+
+
+        <div
+            id="restaurants"
+            class="restaurants-grid"
+        ></div>
+
+        <nav
+            id="pagination"
+            class="pagination"
+            aria-label="Restaurant pages"
+        ></nav>
+
+    </section>
+
+</main>
+
+
+<footer class="footer">
+
+    <div class="footer-inner">
+
+        <div>
+            <div class="footer-logo">
+                🍜 FoodExpress
+            </div>
+
+            <p>
+                Food delivery & analytics platform
+            </p>
+        </div>
+
+        <div class="footer-tech">
+            <span>Powered by</span>
+            <strong>FastAPI</strong>
+            <strong>PostgreSQL</strong>
+        </div>
+
+    </div>
+
+</footer>
+
+
+<script src="js/app.js"></script>
+
+</body>
+</html>

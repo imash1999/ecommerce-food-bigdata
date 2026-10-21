@@ -22,7 +22,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT COALESCE(SUM(total_orders), 0) AS total_orders FROM realtime_order_metrics;",
+          "rawSql": "SELECT COALESCE(SUM(total_orders), 0) AS total_orders FROM realtime_order_metrics WHERE $__timeFilter(window_end);",
           "refId": "A"
         }
       ],
@@ -50,7 +50,7 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT COALESCE(SUM(total_revenue), 0) AS total_revenue FROM realtime_order_metrics;",
+          "rawSql": "SELECT COALESCE(SUM(total_revenue), 0) AS total_revenue FROM realtime_order_metrics WHERE $__timeFilter(window_end);",
           "refId": "A"
         }
       ],

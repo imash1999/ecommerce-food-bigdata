@@ -1,3 +1,4 @@
+SET 'execution.checkpointing.interval' = '30s';
 CREATE TABLE kafka_events (
     event_id STRING,
     user_id STRING,
@@ -22,7 +23,8 @@ CREATE TABLE postgres_sink (
     total_views BIGINT,
     total_cart_adds BIGINT,
     total_buys BIGINT,
-    total_revenue DECIMAL(10, 2)
+    total_revenue DECIMAL(10, 2),
+    PRIMARY KEY (window_start, window_end) NOT ENFORCED
 ) WITH (
     'connector' = 'jdbc',
     'url' = 'jdbc:postgresql://postgres:5432/postgres',

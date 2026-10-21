@@ -42,7 +42,9 @@ services:
         jobmanager.rpc.address: flink-jobmanager
         rest.address: flink-jobmanager
         rest.bind-address: 0.0.0.0
+        state.checkpoints.dir: file:///opt/flink/checkpoints
     volumes:
+      - flink_checkpoints:/opt/flink/checkpoints
       - ./scripts/flink/lib:/opt/flink/usrlib
       - ./scripts/flink/submit.sql:/opt/flink/submit.sql
       - ./scripts/flink/lib/flink-sql-connector-kafka-3.0.0-1.17.jar:/opt/flink/lib/flink-sql-connector-kafka-3.0.0-1.17.jar
@@ -61,7 +63,9 @@ services:
         FLINK_PROPERTIES=
         jobmanager.rpc.address: flink-jobmanager
         taskmanager.numberOfTaskSlots: 4
+         state.checkpoints.dir: file:///opt/flink/checkpoints
     volumes:
+      - flink_checkpoints:/opt/flink/checkpoints
       - ./scripts/flink/lib:/opt/flink/usrlib
       - ./scripts/flink/lib/flink-sql-connector-kafka-3.0.0-1.17.jar:/opt/flink/lib/flink-sql-connector-kafka-3.0.0-1.17.jar
       - ./scripts/flink/lib/flink-connector-jdbc-3.1.0-1.17.jar:/opt/flink/lib/flink-connector-jdbc-3.1.0-1.17.jar
@@ -260,3 +264,4 @@ services:
 volumes:
   postgres_data:
   seaweedfs_data:
+  flink_checkpoints:

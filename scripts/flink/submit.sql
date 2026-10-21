@@ -1,6 +1,7 @@
 SET 'execution.runtime-mode' = 'streaming';
 SET 'execution.target' = 'remote';
 SET 'jobmanager.rpc.address' = 'flink-jobmanager';
+SET 'execution.checkpointing.interval' = '30s';
 
 CREATE TABLE order_events (
     event_id STRING,
@@ -26,7 +27,8 @@ CREATE TABLE postgres_sink (
     window_end TIMESTAMP(3),
     total_orders BIGINT,
     total_revenue DECIMAL(12,2),
-    avg_order_amount DECIMAL(12,2)
+    avg_order_amount DECIMAL(12,2),
+    PRIMARY KEY (window_start, window_end) NOT ENFORCED
 ) WITH (
     'connector' = 'jdbc',
     'url' = 'jdbc:postgresql://postgres:5432/postgres',

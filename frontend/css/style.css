@@ -773,3 +773,37 @@ body {
         font-size: 12px;
     }
 }
+
+
+/* SVG icon styling */
+.logo-icon {
+    display: block;
+    object-fit: contain;
+    flex: 0 0 auto;
+}
+
+.category > img {
+    display: block;
+    object-fit: contain;
+}
+
+.hero-decoration img {
+    display: block;
+    width: 150px;
+    height: 150px;
+    object-fit: contain;
+}
+
+.restaurant-image-fallback {
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.restaurant-placeholder-icon {
+    display: block;
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+}

@@ -182,9 +182,9 @@ function createRestaurantCard(restaurant) {
                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
                        >
                        <span class="restaurant-image-fallback" style="display:none;">
-                           ${getRestaurantEmoji(category)}
+                           <img src="${getRestaurantIcon(category)}" alt="" width="64" height="64">
                        </span>`
-                    : getRestaurantEmoji(category)
+                    : `<img class="restaurant-placeholder-icon" src="${getRestaurantIcon(category)}" alt="" width="64" height="64">`
             }
         </div>
 
@@ -236,54 +236,23 @@ function createRestaurantCard(restaurant) {
 }
 
 
-function getRestaurantEmoji(category) {
+function getRestaurantIcon(category) {
+    const text = String(category || "").toLowerCase();
 
-    const text =
-        String(category).toLowerCase();
-
-
-    if (text.includes("pizza")) {
-        return "🍕";
-    }
-
-    if (
-        text.includes("burger") ||
-        text.includes("american")
-    ) {
-        return "🍔";
-    }
-
-    if (
-        text.includes("coffee") ||
-        text.includes("tea")
-    ) {
-        return "☕";
-    }
-
-    if (
-        text.includes("sandwich") ||
-        text.includes("cheesesteak")
-    ) {
-        return "🥪";
-    }
-
+    if (text.includes("pizza")) return "images/icons/pizza.svg";
+    if (text.includes("burger") || text.includes("american")) return "images/icons/burger.svg";
+    if (text.includes("coffee") || text.includes("tea")) return "images/icons/coffee.svg";
+    if (text.includes("sandwich") || text.includes("cheesesteak")) return "images/icons/sandwich.svg";
     if (
         text.includes("chinese") ||
         text.includes("asian") ||
         text.includes("thai") ||
         text.includes("japanese")
-    ) {
-        return "🍜";
+    ) return "images/icons/asian.svg";
+    if (text.includes("breakfast") || text.includes("brunch")) {
+        return "images/icons/breakfast.svg";
     }
-
-    if (
-        text.includes("breakfast") ||
-        text.includes("brunch")
-    ) {
-        return "🥞";
-    }
-
-    return "🍽️";
+    return "images/icons/restaurant.svg";
 }
 
 function searchRestaurants(query) {

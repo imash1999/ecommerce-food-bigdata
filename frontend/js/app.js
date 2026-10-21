@@ -3,64 +3,57 @@ const API_BASE_URL = "http://localhost:8000";
 let restaurants = [];
 let currentCategory = "all";
 
-async function loadRestaurants() {
+const PAGE_SIZE = 100;
+let currentPage = 1;
+let filteredRestaurants = [];
 
+async function loadRestaurants() {
     showLoading();
 
     try {
-
         const response = await fetch(
-            `${API_BASE_URL}/restaurants?limit=100`
+            `${API_BASE_URL}/restaurants?limit=5000&offset=0`
         );
 
         if (!response.ok) {
-            throw new Error(
-                `HTTP error: ${response.status}`
-            );
+            throw new Error(`HTTP error: ${response.status}`);
         }
 
         const result = await response.json();
-
         restaurants = result.data || [];
 
-        renderRestaurants(restaurants);
-
-    } catch (error) {
-
-        console.error(
-            "Failed to load restaurants:",
-            error
+        searchRestaurants(
+            document.getElementById("searchInput")?.value || ""
         );
-
+    } catch (error) {
+        console.error("Failed to load restaurants:", error);
         showError();
-
     }
 }
 
 function renderRestaurants(data) {
-
-    const container =
-        document.getElementById("restaurants");
-
-    const loading =
-        document.getElementById("loading");
-
-    const error =
-        document.getElementById("error");
-
-    const resultInfo =
-        document.getElementById("resultInfo");
-
+    const container = document.getElementById("restaurants");
+    const loading = document.getElementById("loading");
+    const error = document.getElementById("error");
+    const resultInfo = document.getElementById("resultInfo");
+    const pagination = document.getElementById("pagination");
 
     loading.style.display = "none";
     error.style.display = "none";
-
-
     container.innerHTML = "";
 
+    filteredRestaurants = data;
 
-    if (!data.length) {
+    const totalPages = Math.max(
+        1,
+        Math.ceil(filteredRestaurants.length / PAGE_SIZE)
+    );
 
+    if (currentPage > totalPages) {
+        currentPage = totalPages;
+    }
+
+    if (!filteredRestaurants.length) {
         container.innerHTML = `
             <div class="error-message">
                 <strong>No restaurants found.</strong>
@@ -69,22 +62,80 @@ function renderRestaurants(data) {
         `;
 
         resultInfo.textContent = "0 restaurants";
-
+        pagination.innerHTML = "";
+        pagination.style.display = "none";
         return;
     }
 
+    const startIndex = (currentPage - 1) * PAGE_SIZE;
+    const pageRestaurants = filteredRestaurants.slice(
+        startIndex,
+        startIndex + PAGE_SIZE
+    );
 
     resultInfo.textContent =
-        `${data.length} restaurants`;
+        `Showing ${startIndex + 1}–${Math.min(
+            startIndex + PAGE_SIZE,
+            filteredRestaurants.length
+        )} of ${filteredRestaurants.length} restaurants`;
 
+    pageRestaurants.forEach(restaurant => {
+        container.appendChild(createRestaurantCard(restaurant));
+    });
 
-    data.forEach(restaurant => {
+    renderPagination(totalPages);
+}
 
-        const card =
-            createRestaurantCard(restaurant);
+function renderPagination(totalPages) {
+    const pagination = document.getElementById("pagination");
+    pagination.innerHTML = "";
 
-        container.appendChild(card);
+    if (totalPages <= 1) {
+        pagination.style.display = "none";
+        return;
+    }
 
+    pagination.style.display = "flex";
+
+    function addButton(label, page, options = {}) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "page-button";
+        button.textContent = label;
+        button.disabled = Boolean(options.disabled);
+
+        if (options.active) {
+            button.classList.add("active");
+            button.setAttribute("aria-current", "page");
+        }
+
+        button.addEventListener("click", () => {
+            if (page === currentPage || button.disabled) {
+                return;
+            }
+
+            currentPage = page;
+            renderRestaurants(filteredRestaurants);
+
+            document.querySelector(".restaurants-section")
+                ?.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+
+        pagination.appendChild(button);
+    }
+
+    addButton("← Previous", currentPage - 1, {
+        disabled: currentPage === 1
+    });
+
+    for (let page = 1; page <= totalPages; page++) {
+        addButton(String(page), page, {
+            active: page === currentPage
+        });
+    }
+
+    addButton("Next →", currentPage + 1, {
+        disabled: currentPage === totalPages
     });
 }
 
@@ -291,6 +342,7 @@ function searchRestaurants(query) {
     }
 
 
+    currentPage = 1;
     renderRestaurants(filtered);
 }
 function matchesCategory(

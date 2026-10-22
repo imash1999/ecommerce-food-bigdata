@@ -2,7 +2,7 @@ FROM python:3.10-slim
 
 WORKDIR /app
 
-COPY *.whl ./
+COPY wheels/*.whl ./
 RUN pip install --no-index --find-links=. *.whl
 
 COPY main.py .

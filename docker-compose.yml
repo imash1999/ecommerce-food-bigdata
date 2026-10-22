@@ -173,6 +173,7 @@ services:
     depends_on:
       - postgres
     environment:
+      - PYTHONPATH=/home/airflow/.local/lib/python3.10/site-packages
       - AIRFLOW__CORE__EXECUTOR=SequentialExecutor
       - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://postgres:root@postgres:5432/ecommerce_analytics
       - AIRFLOW__CORE__FERNET_KEY=93DTwddVTo03V7KIWyFs9m-aN1VN4d9gqVIHiz4pyTs=
@@ -205,6 +206,7 @@ services:
     depends_on:
       - airflow-webserver
     environment:
+      - PYTHONPATH=/home/airflow/.local/lib/python3.10/site-packages
       - AIRFLOW__CORE__EXECUTOR=SequentialExecutor
       - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://postgres:root@postgres:5432/ecommerce_analytics
       - AIRFLOW__CORE__FERNET_KEY=93DTwddVTo03V7KIWyFs9m-aN1VN4d9gqVIHiz4pyTs=

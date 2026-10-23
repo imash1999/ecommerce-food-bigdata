@@ -28,7 +28,6 @@
 * Apache Spark
 * Apache Airflow
 * PostgreSQL
-* Redis
 * SeaweedFS
 * Grafana
 * FastAPI / Backend

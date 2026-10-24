@@ -50,7 +50,7 @@ function renderRecommendations(recommendations) {
 
     showState("recommendations");
 
-    recommendations.forEach(rec => {
+    recommendations.forEach((rec, index) => {
         const card = document.createElement("article");
         card.className = "recommendation-card";
 
@@ -70,7 +70,7 @@ function renderRecommendations(recommendations) {
             : emoji;
 
         card.innerHTML = `
-            <div class="rank-badge">#${escapeHtml(rec.rank)}</div>
+            <div class="rank-badge">#${index + 1}</div>
 
             <div class="recommendation-image">
                 ${imageHtml}

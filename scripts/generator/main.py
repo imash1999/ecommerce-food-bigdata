@@ -1,4 +1,3 @@
-
 import html
 import json
 import os
@@ -9,7 +8,6 @@ from contextlib import closing
 from datetime import datetime, timezone
 from decimal import Decimal, ROUND_HALF_UP
 
-import boto3
 import psycopg2
 from kafka import KafkaProducer
 
@@ -24,13 +22,7 @@ POSTGRES_DB = os.getenv("POSTGRES_DB", "postgres")
 POSTGRES_USER = os.getenv("POSTGRES_USER", "postgres")
 POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD", "root")
 
-S3_ENDPOINT_URL = os.getenv("S3_ENDPOINT_URL", "http://seaweedfs:9000")
-S3_ACCESS_KEY = os.getenv("S3_ACCESS_KEY", "seaweedfs")
-S3_SECRET_KEY = os.getenv("S3_SECRET_KEY", "seaweedfs")
-S3_BUCKET = os.getenv("S3_BUCKET", "raw-events")
-
 CENT = Decimal("0.01")
-_bucket_creation_attempted = False
 
 
 def get_db_connection():
@@ -42,47 +34,6 @@ def get_db_connection():
         password=POSTGRES_PASSWORD,
         connect_timeout=10,
     )
-
-
-s3_client = boto3.client(
-    "s3",
-    endpoint_url=S3_ENDPOINT_URL,
-    aws_access_key_id=S3_ACCESS_KEY,
-    aws_secret_access_key=S3_SECRET_KEY,
-)
-
-
-def send_to_minio(event_data, folder="orders"):
-    global _bucket_creation_attempted
-
-    try:
-        if not _bucket_creation_attempted:
-            _bucket_creation_attempted = True
-            try:
-                s3_client.create_bucket(Bucket=S3_BUCKET)
-            except Exception as exc:
-                print(f"Bucket initialization notice: {exc}")
-
-        now = datetime.now(timezone.utc)
-        file_path = (
-            f"{folder}/{now.strftime('%Y-%m-%d')}/"
-            f"event_{now.strftime('%H%M%S_%f')}_{uuid.uuid4().hex}.json"
-        )
-
-        body = json.dumps(
-            event_data,
-            ensure_ascii=False,
-        ).encode("utf-8")
-
-        s3_client.put_object(
-            Bucket=S3_BUCKET,
-            Key=file_path,
-            Body=body,
-            ContentType="application/json",
-        )
-
-    except Exception as exc:
-        print(f"Object storage error ({folder}): {exc}")
 
 
 def generate_order_event():
@@ -253,7 +204,6 @@ def main():
                         value=ecommerce_event,
                     ).get(timeout=120)
 
-                    send_to_minio(ecommerce_event, folder="events")
 
                     print(
                         "Ecommerce event | "
@@ -268,7 +218,6 @@ def main():
                     value=order,
                 ).get(timeout=120)
 
-                send_to_minio(order, folder="orders")
 
                 print(
                     "Order created | "

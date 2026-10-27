@@ -125,6 +125,25 @@ services:
       KAFKA_BOOTSTRAP_SERVERS: kafka:29092
       KAFKA_TOPIC: order-events
 
+  consumer:
+    build:
+      context: ./scripts/consumer
+      dockerfile: Dockerfile
+    container_name: seaweedfs-consumer
+    restart: unless-stopped
+    depends_on:
+      - kafka
+      - seaweedfs
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+      KAFKA_CONSUMER_GROUP: seaweedfs-archiver-group
+      S3_ENDPOINT_URL: http://seaweedfs:9000
+      S3_ACCESS_KEY: seaweedfs
+      S3_SECRET_KEY: seaweedfs
+      S3_BUCKET: raw-events
+      S3_PREFIX: ""
+    
+
   flink-processor:
     build:
       context: ./scripts/flink

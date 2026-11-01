@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Restaurant - FoodExpress</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/restaurant.css">
+</head>
+
+<body>
+
+<header class="topbar">
+    <div class="topbar-inner">
+
+        <a href="/" class="logo">
+            <img class="logo-icon" src="images/icons/logo.svg" alt="" width="30" height="30">
+            <span>FoodExpress</span>
+        </a>
+
+        <div class="location">
+            <span>📍</span>
+            <span>Birmingham, AL</span>
+        </div>
+
+        <div class="search-box">
+            <span class="search-icon">🔍</span>
+
+            <input
+                id="menuSearch"
+                type="text"
+                placeholder="Search dishes..."
+            >
+        </div>
+
+        <nav class="nav">
+            <a href="index.html" class="nav-link">
+                Restaurants
+            </a>
+
+            <a href="cart.html" class="nav-link">
+                Cart <span id="cartCount">0</span>
+            </a>
+
+            <a href="#" class="login-button">
+                Sign in
+            </a>
+        </nav>
+
+    </div>
+</header>
+
+
+<main>
+
+    <div
+        id="restaurantLoading"
+        class="loading restaurant-loading"
+    >
+        <div class="loading-spinner"></div>
+        <p>Loading restaurant...</p>
+    </div>
+
+
+    <div
+        id="restaurantError"
+        class="error-message restaurant-error"
+        style="display: none;"
+    >
+        <strong>Unable to load restaurant.</strong>
+
+        <p>
+            The restaurant could not be found.
+        </p>
+
+        <a href="index.html">
+            Back to restaurants
+        </a>
+    </div>
+
+
+    <section
+        id="restaurantPage"
+        class="restaurant-page"
+        style="display: none;"
+    >
+
+        <div class="restaurant-hero">
+
+            <div class="restaurant-hero-image">
+                🍽️
+            </div>
+
+            <div class="restaurant-hero-info">
+
+                <div class="restaurant-hero-category">
+                    RESTAURANT
+                </div>
+
+                <h1 id="restaurantName">
+                    Restaurant
+                </h1>
+
+                <p
+                    id="restaurantCategory"
+                    class="restaurant-category-large"
+                >
+                </p>
+
+                <div class="restaurant-details">
+
+                    <span
+                        id="restaurantRating"
+                        class="detail-rating"
+                    >
+                    </span>
+
+                    <span
+                        id="restaurantPrice"
+                        class="detail-price"
+                    >
+                    </span>
+
+                    <span
+                        id="restaurantAddress"
+                        class="detail-address"
+                    >
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="menu-layout">
+
+            <aside class="menu-sidebar">
+
+                <h3>Menu</h3>
+
+                <div
+                    id="menuCategories"
+                    class="menu-categories"
+                >
+                </div>
+
+            </aside>
+
+
+            <section class="menu-content">
+
+                <div class="menu-header">
+
+                    <div>
+                        <p class="section-eyebrow">
+                            MENU
+                        </p>
+
+                        <h2 id="menuTitle">
+                            All dishes
+                        </h2>
+                    </div>
+
+                    <span
+                        id="dishCount"
+                        class="dish-count"
+                    >
+                    </span>
+
+                </div>
+
+
+                <div
+                    id="menuGrid"
+                    class="menu-grid"
+                >
+                </div>
+
+            </section>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<div
+    id="cartBar"
+    class="cart-bar"
+    style="display: none;"
+>
+
+    <div>
+        <strong id="cartItemsCount">
+            0 items
+        </strong>
+
+        <span id="cartTotal">
+            $0.00
+        </span>
+    </div>
+
+    <button onclick="window.location.href='cart.html'">
+        View cart
+    </button>
+
+</div>
+
+
+<script src="js/restaurant.js"></script>
+
+</body>
+</html>

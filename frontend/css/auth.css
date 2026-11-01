@@ -1,0 +1,144 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f7f7f7;
+    color: #222;
+}
+
+.auth-page {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 20px;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 430px;
+    background: white;
+    border-radius: 16px;
+    padding: 35px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+.logo {
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    color: #ff5a1f;
+    font-size: 30px;
+    font-weight: 800;
+    margin-bottom: 25px;
+}
+
+.auth-tabs {
+    display: flex;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 28px;
+}
+
+.auth-tabs button {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 14px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    color: #777;
+    border-bottom: 2px solid transparent;
+}
+
+.auth-tabs button.active {
+    color: #ff5a1f;
+    border-bottom-color: #ff5a1f;
+}
+
+.auth-form h1 {
+    margin: 0 0 8px;
+    font-size: 26px;
+}
+
+.subtitle {
+    margin: 0 0 25px;
+    color: #777;
+}
+
+.auth-form label {
+    display: block;
+    margin: 15px 0 7px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.auth-form input {
+    width: 100%;
+    padding: 13px 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 15px;
+    outline: none;
+}
+
+.auth-form input:focus {
+    border-color: #ff5a1f;
+}
+
+.submit-button {
+    width: 100%;
+    margin-top: 22px;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    background: #ff5a1f;
+    color: white;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.submit-button:hover {
+    background: #e94d17;
+}
+
+.message {
+    margin-top: 15px;
+    font-size: 14px;
+    min-height: 20px;
+}
+
+.message.error {
+    color: #d93025;
+}
+
+.message.success {
+    color: #16803c;
+}
+
+.hidden {
+    display: none;
+}
+
+.back-link {
+    display: block;
+    text-align: center;
+    margin-top: 25px;
+    color: #777;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.back-link:hover {
+    color: #ff5a1f;
+}
+
+@media (max-width: 500px) {
+    .auth-card {
+        padding: 25px 20px;
+    }
+}

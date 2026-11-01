@@ -1,0 +1,22 @@
+cd scripts/spark/wheels
+rm *.whl
+
+pip download \
+  "numpy==1.24.4" \
+  "pandas==1.5.3" \
+  "scipy==1.10.1" \
+  python-dateutil pytz six tzdata \
+  --python-version 38 \
+  --only-binary=:all: \
+  --platform manylinux2014_x86_64 \
+  -d .
+
+ls -la scripts/spark/*.jar
+
+cd scripts/spark/
+wget https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.12.262/aws-java-sdk-bundle-1.12.262.jar
+wget https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.3.4/hadoop-aws-3.3.4.jar
+wget https://repo1.maven.org/maven2/org/postgresql/postgresql/42.6.0/postgresql-42.6.0.jar
+
+python -m pip install -r backend/requirements.txt
+docker pull python:3.10-slim

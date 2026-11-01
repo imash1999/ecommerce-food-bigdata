@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodExpress - Checkout</title>
+    <link rel="stylesheet" href="css/checkout.css">
+</head>
+<body>
+
+<header class="checkout-header">
+    <a href="index.html" class="logo">FoodExpress</a>
+
+    <div id="checkoutUser" class="checkout-user"></div>
+</header>
+
+<main class="checkout-page">
+
+    <div class="checkout-content">
+
+        <section class="checkout-section">
+            <h1>Checkout</h1>
+
+            <div id="authWarning" class="warning hidden">
+                Please login before placing an order.
+                <a href="auth.html">Login</a>
+            </div>
+
+            <div class="section-card">
+                <h2>Delivery address</h2>
+
+                <textarea
+                    id="deliveryAddress"
+                    rows="4"
+                    placeholder="Enter your delivery address"
+                ></textarea>
+            </div>
+
+            <div class="section-card">
+                <h2>Your order</h2>
+
+                <div id="checkoutItems"></div>
+            </div>
+
+        </section>
+
+        <aside class="summary-card">
+            <h2>Order summary</h2>
+
+            <div class="summary-row">
+                <span>Subtotal</span>
+                <span id="checkoutSubtotal">$0.00</span>
+            </div>
+
+            <div class="summary-row">
+                <span>Delivery fee</span>
+                <span id="checkoutDelivery">$2.99</span>
+            </div>
+
+            <div class="summary-row total-row">
+                <span>Total</span>
+                <span id="checkoutTotal">$0.00</span>
+            </div>
+
+            <button
+                id="placeOrderButton"
+                class="place-order-button"
+                onclick="placeOrder()"
+            >
+                Place Order
+            </button>
+
+            <a href="cart.html" class="back-cart">
+                ← Back to cart
+            </a>
+        </aside>
+
+    </div>
+
+</main>
+
+<script src="js/checkout.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders - FoodExpress</title>
+    <link rel="stylesheet" href="css/my-orders.css">
+</head>
+<body>
+
+<header class="topbar">
+    <div class="topbar-inner">
+        <a href="index.html" class="logo">FoodExpress</a>
+
+        <nav class="nav-links">
+            <a href="index.html#restaurants">Restaurants</a>
+            <a href="for-you.html" class="nav-link">For You</a>
+            <a href="cart.html">Cart</a>
+            <a href="my-orders.html" class="active">My Orders</a>
+        </nav>
+    </div>
+</header>
+
+<main class="orders-page">
+    <div class="orders-container">
+
+        <div class="page-header">
+            <div>
+                <h1>My Orders</h1>
+                <p id="userGreeting">Your order history</p>
+            </div>
+        </div>
+
+        <div id="loadingState" class="state-message">
+            Loading your orders...
+        </div>
+
+        <div id="errorState" class="state-message error" hidden></div>
+
+        <div id="emptyState" class="state-message empty" hidden>
+            <h2>No orders yet</h2>
+            <p>When you place an order, it will appear here.</p>
+            <a href="index.html" class="browse-button">Browse Restaurants</a>
+        </div>
+
+        <div id="ordersList" class="orders-list"></div>
+
+    </div>
+</main>
+
+<script src="js/my-orders.js"></script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodExpress - Order Confirmed</title>
+    <link rel="stylesheet" href="css/order-success.css">
+</head>
+<body>
+
+<div class="success-page">
+
+    <div class="success-card">
+
+        <div class="success-icon">✓</div>
+
+        <h1>Order Confirmed!</h1>
+
+        <p id="orderMessage">
+            Your order has been placed successfully.
+        </p>
+
+        <div id="orderDetails" class="order-details"></div>
+
+        <div class="success-actions">
+            <a href="index.html" class="primary-button">
+                Continue shopping
+            </a>
+
+            <a href="cart.html" class="secondary-button">
+                View cart
+            </a>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    const params = new URLSearchParams(window.location.search);
+    const orderId = params.get("id");
+
+    const savedOrder =
+        localStorage.getItem("foodexpress_last_order");
+
+    const details =
+        document.getElementById("orderDetails");
+
+    if (savedOrder) {
+        try {
+            const order = JSON.parse(savedOrder);
+
+            details.innerHTML = `
+                <div>
+                    <span>Order</span>
+                    <strong>#${order.id}</strong>
+                </div>
+
+                <div>
+                    <span>Status</span>
+                    <strong>${order.status}</strong>
+                </div>
+
+                <div>
+                    <span>Total</span>
+                    <strong>$${Number(order.total_amount).toFixed(2)}</strong>
+                </div>
+            `;
+        } catch (error) {
+            console.error(error);
+        }
+    } else if (orderId) {
+        details.innerHTML = `
+            <div>
+                <span>Order</span>
+                <strong>#${orderId}</strong>
+            </div>
+        `;
+    }
+</script>
+
+</body>
+</html>
